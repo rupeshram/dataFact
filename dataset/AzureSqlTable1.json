@@ -1,0 +1,46 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Date",
+				"type": "varchar"
+			},
+			{
+				"name": "Close_Last",
+				"type": "varchar"
+			},
+			{
+				"name": "Volume",
+				"type": "varchar"
+			},
+			{
+				"name": "openedAt",
+				"type": "varchar"
+			},
+			{
+				"name": "High",
+				"type": "varchar"
+			},
+			{
+				"name": "Low",
+				"type": "varchar"
+			},
+			{
+				"name": "ticker",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "stockData"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

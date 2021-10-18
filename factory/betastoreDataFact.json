@@ -1,0 +1,9 @@
+{
+	"name": "betastoreDataFact",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a370e9c9-785d-402e-925c-68316b72bc73",
+		"tenantId": "0d89ca35-d46e-4ed8-b596-136b83b946c8"
+	}
+}

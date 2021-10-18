@@ -1,0 +1,39 @@
+{
+	"name": "UpdateLatestStockData",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "stockdata"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "SQLData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LatestStockData"
+				}
+			],
+			"script": "source(output(\n\t\tDate as string,\n\t\tOpen as string,\n\t\tVolume as string,\n\t\tClose as string,\n\t\tHigh as string,\n\t\tLow as string,\n\t\tticker as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> stockdata\nsource(output(\n\t\tDate as string,\n\t\tClose_Last as string,\n\t\tVolume as string,\n\t\topenedAt as string,\n\t\tHigh as string,\n\t\tLow as string,\n\t\tticker as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SQLData\nstockdata, SQLData exists(stockdata@Date == SQLData@Date\n\t&& stockdata@ticker == SQLData@ticker,\n\tnegate:true,\n\tbroadcast: 'auto')~> LatestStockData\nLatestStockData sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDate as string,\n\t\tClose_Last as string,\n\t\tVolume as string,\n\t\topenedAt as string,\n\t\tHigh as string,\n\t\tLow as string,\n\t\tticker as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDate,\n\t\tClose_Last = Close,\n\t\tVolume,\n\t\topenedAt = Open,\n\t\tHigh,\n\t\tLow,\n\t\tticker\n\t)) ~> sink1"
+		}
+	}
+}
